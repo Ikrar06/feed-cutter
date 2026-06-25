@@ -1,21 +1,35 @@
+import { useEffect, useState } from 'react';
 import { useFeedCutter } from './hooks/useFeedCutter';
 import { GridPicker } from './components/GridPicker';
 import { TargetSizeBadge } from './components/TargetSizeBadge';
 import { Dropzone } from './components/Dropzone';
+import { PreviewBoard } from './components/PreviewBoard';
 import { downloadBlob } from './lib/download';
 
 export default function App() {
-  const { grid, setGrid, file, setFile, target, results, status, error, run } = useFeedCutter();
+  const { grid, setGrid, cfg, file, setFile, target, results, status, error, run } =
+    useFeedCutter();
 
   const isCutting = status === 'cutting';
   const canCut = !!file && !isCutting;
+
+  // Object URL untuk preview desain yang diupload
+  const [previewUrl, setPreviewUrl] = useState<string | undefined>();
+  useEffect(() => {
+    if (!file) { setPreviewUrl(undefined); return; }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-ink)]">
       <div className="mx-auto max-w-2xl px-4 py-10 space-y-8">
 
         <header className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">Feed Cutter</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Feed <span className="text-[var(--color-blade)]">Cutter</span>
+          </h1>
           <p className="text-sm text-[var(--color-muted)]">
             Potong desain besar menjadi postingan Instagram 1080×1350 yang mulus di grid profil.
           </p>
@@ -30,6 +44,17 @@ export default function App() {
           </div>
 
           <Dropzone target={target} onFile={setFile} />
+
+          {/* Preview tampilan feed IG */}
+          <div>
+            <p className="text-sm font-medium text-[var(--color-muted)] mb-2">
+              Preview feed
+              <span className="text-xs font-normal text-[var(--color-muted)]">
+                {' '}— angka = urutan upload
+              </span>
+            </p>
+            <PreviewBoard grid={grid} cfg={cfg} imageUrl={previewUrl} />
+          </div>
 
           <button
             onClick={run}
@@ -74,7 +99,7 @@ export default function App() {
                     </p>
                     <button
                       onClick={() => downloadBlob(r.blob, r.filename)}
-                      className="w-full rounded text-xs py-1 bg-[var(--color-line)] hover:bg-[var(--color-muted)]/30 transition-colors"
+                      className="w-full rounded text-xs py-1 bg-[var(--color-line)] hover:bg-[var(--color-muted)]/20 transition-colors"
                     >
                       Unduh
                     </button>

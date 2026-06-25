@@ -24,9 +24,9 @@ export function GridPicker({ grid, onChange }: Props) {
   const setCol = (v: number) => onChange({ ...grid, cols: clamp(v, 1, MAX_COLS) });
   const setRow = (v: number) => onChange({ ...grid, rows: clamp(v, 1, MAX_ROWS) });
 
-  const activePreset = PRESETS.find(
+  const activeLabel = PRESETS.find(
     (p) => p.grid.cols === grid.cols && p.grid.rows === grid.rows,
-  );
+  )?.label;
 
   return (
     <div className="space-y-3">
@@ -39,9 +39,9 @@ export function GridPicker({ grid, onChange }: Props) {
             onClick={() => onChange(p.grid)}
             className={[
               'px-3 py-1.5 rounded text-sm font-medium transition-colors',
-              activePreset?.label === p.label
+              activeLabel === p.label
                 ? 'bg-[var(--color-blade)] text-white'
-                : 'bg-[var(--color-panel)] text-[var(--color-ink)] hover:bg-[var(--color-line)]',
+                : 'bg-[var(--color-bg)] text-[var(--color-ink)] border border-[var(--color-line)] hover:border-[var(--color-muted)]',
             ].join(' ')}
           >
             {p.label}
@@ -58,9 +58,9 @@ export function GridPicker({ grid, onChange }: Props) {
             max={MAX_COLS}
             value={grid.cols}
             onChange={(e) => setCol(Number(e.target.value))}
-            className="w-16 px-2 py-1 rounded bg-[var(--color-panel)] text-[var(--color-ink)] border border-[var(--color-line)] text-center"
+            className="w-16 px-2 py-1 rounded bg-[var(--color-bg)] text-[var(--color-ink)] border border-[var(--color-line)] text-center"
           />
-          <span className="text-xs text-[var(--color-muted)]">(maks {MAX_COLS})</span>
+          <span className="text-xs text-[var(--color-muted)]">maks {MAX_COLS}</span>
         </label>
         <span className="text-[var(--color-muted)]">×</span>
         <label className="flex items-center gap-2 text-sm text-[var(--color-muted)]">
@@ -71,9 +71,9 @@ export function GridPicker({ grid, onChange }: Props) {
             max={MAX_ROWS}
             value={grid.rows}
             onChange={(e) => setRow(Number(e.target.value))}
-            className="w-16 px-2 py-1 rounded bg-[var(--color-panel)] text-[var(--color-ink)] border border-[var(--color-line)] text-center"
+            className="w-16 px-2 py-1 rounded bg-[var(--color-bg)] text-[var(--color-ink)] border border-[var(--color-line)] text-center"
           />
-          <span className="text-xs text-[var(--color-muted)]">(maks {MAX_ROWS})</span>
+          <span className="text-xs text-[var(--color-muted)]">maks {MAX_ROWS}</span>
         </label>
       </div>
     </div>

@@ -74,8 +74,8 @@ export function Dropzone({ target, onFile }: Props) {
   }
 
   const levelColor: Record<string, string> = {
-    ok: 'text-green-400',
-    scalable: 'text-yellow-400',
+    ok: 'text-emerald-400',
+    scalable: 'text-amber-400',
     distort: 'text-[var(--color-blade)]',
   };
 
