@@ -1,16 +1,16 @@
 import type { GridSpec } from '../types';
 
-const MAX_COLS = 6;
-const MAX_ROWS = 3;
+const MAX_COLS = 3;
+const MAX_ROWS = 8;
 
 const PRESETS: { label: string; grid: GridSpec }[] = [
-  { label: '1×2', grid: { cols: 2, rows: 1 } },
-  { label: '1×3', grid: { cols: 3, rows: 1 } },
-  { label: '2×3', grid: { cols: 3, rows: 2 } },
+  { label: '1×1', grid: { cols: 1, rows: 1 } },
+  { label: '2×1', grid: { cols: 2, rows: 1 } },
+  { label: '3×1', grid: { cols: 3, rows: 1 } },
+  { label: '3×2', grid: { cols: 3, rows: 2 } },
   { label: '3×3', grid: { cols: 3, rows: 3 } },
-  { label: '1×6', grid: { cols: 6, rows: 1 } },
-  { label: '2×6', grid: { cols: 6, rows: 2 } },
-  { label: '3×6', grid: { cols: 6, rows: 3 } },
+  { label: '3×6', grid: { cols: 3, rows: 6 } },
+  { label: '3×8', grid: { cols: 3, rows: 8 } },
 ];
 
 interface Props {
