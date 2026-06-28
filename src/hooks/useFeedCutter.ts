@@ -22,7 +22,12 @@ function readNaturalSize(file: File): Promise<{ width: number; height: number }>
 
 export function useFeedCutter() {
   const [grid, setGrid] = useState<GridSpec>({ cols: 3, rows: 1 });
-  const [mode, setMode] = useState<CutMode>('mosaic');
+  const [mode, _setMode] = useState<CutMode>('mosaic');
+  const setMode = useCallback((m: CutMode) => {
+    _setMode(m);
+    if (m === 'carousel') setGrid((g) => ({ ...g, rows: 1, cols: Math.min(g.cols, 10) }));
+    if (m === 'mosaic')   setGrid((g) => ({ ...g, cols: 3 }));
+  }, []);
   const [cfg, setCfgRaw] = useState<CutConfig>(DEFAULT_CONFIG);
   const [file, setFile] = useState<File | null>(null);
   const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);

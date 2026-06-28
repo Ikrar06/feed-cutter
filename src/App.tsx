@@ -62,7 +62,7 @@ export default function App() {
         {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
 
         <section className="rounded-xl border border-[var(--color-line)] bg-[var(--color-panel)] p-6 space-y-6">
-          <GridPicker grid={grid} onChange={setGrid} />
+          <GridPicker grid={grid} mode={mode} onChange={setGrid} />
 
           <div>
             <div className="flex items-center justify-between mb-2">
