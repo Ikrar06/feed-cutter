@@ -57,7 +57,7 @@ export default function App() {
 
           <div>
             <p className="text-sm font-medium text-[var(--color-muted)] mb-2">
-              Preview feed
+              {mode === 'carousel' ? 'Preview slides' : 'Preview feed'}
               <span className="text-xs font-normal text-[var(--color-muted)]">
                 {' '}— angka = urutan upload
               </span>
