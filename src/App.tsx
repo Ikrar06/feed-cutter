@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { useFeedCutter } from './hooks/useFeedCutter';
 import { GridPicker } from './components/GridPicker';
 import { TargetSizeBadge } from './components/TargetSizeBadge';
@@ -134,6 +135,7 @@ export default function App() {
           <ResultGrid results={results} grid={grid} mode={mode} />
         )}
       </div>
+      <Analytics />
     </div>
   );
 }
