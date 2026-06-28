@@ -38,11 +38,12 @@ export function PreviewBoard({
   // --- drag-to-pan ---
   const dragRef = useRef<{ startX: number; startY: number; ox: number; oy: number } | null>(null);
 
+  const cellW = mode === 'carousel' ? cfg.postW : cfg.visible;
+
   const getScale = useCallback(() => {
-    // screen px per design px (based on one cell width)
     const cellWidth = boardWidth / grid.cols;
-    return cellWidth / cfg.visible;
-  }, [boardWidth, grid.cols, cfg.visible]);
+    return cellWidth / cellW;
+  }, [boardWidth, grid.cols, cellW]);
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     if (!onOffsetChange || !imageUrl) return;
@@ -81,14 +82,18 @@ export function PreviewBoard({
             onMouseLeave={onMouseUp}
           >
             {tiles.map((tile) => {
-              const visibleX = tile.sx + cfg.bleed + offset.x;
+              // mosaic: tambah bleed agar hanya area visible yang tampil
+              // carousel: tampil penuh 1080px per slide, tanpa bleed
+              const visibleX = mode === 'carousel'
+                ? tile.sx + offset.x
+                : tile.sx + cfg.bleed + offset.x;
               const visibleY = tile.sy + offset.y;
 
               return (
                 <div
                   key={tile.readingIndex}
                   className="relative overflow-hidden bg-[var(--color-line)]"
-                  style={{ aspectRatio: `${cfg.visible} / ${cfg.postH}` }}
+                  style={{ aspectRatio: `${cellW} / ${cfg.postH}` }}
                 >
                   {imageUrl && (
                     <img
@@ -97,9 +102,9 @@ export function PreviewBoard({
                       draggable={false}
                       style={{
                         position: 'absolute',
-                        width: `${(design.width / cfg.visible) * 100}%`,
+                        width: `${(design.width / cellW) * 100}%`,
                         height: 'auto',
-                        left: `-${(visibleX / cfg.visible) * 100}%`,
+                        left: `-${(visibleX / cellW) * 100}%`,
                         top: `-${(visibleY / cfg.postH) * 100}%`,
                         maxWidth: 'none',
                         pointerEvents: 'none',
