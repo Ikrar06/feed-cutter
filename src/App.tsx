@@ -63,6 +63,32 @@ export default function App() {
         {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
 
         <section className="rounded-xl border border-[var(--color-line)] bg-[var(--color-panel)] p-6 space-y-6">
+          {/* Mode toggle */}
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-[var(--color-muted)]">Mode</p>
+            <div className="flex gap-2">
+              {(['mosaic', 'carousel'] as const).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setMode(m)}
+                  className={[
+                    'px-4 py-1.5 rounded text-sm font-medium transition-colors',
+                    mode === m
+                      ? 'bg-[var(--color-blade)] text-white'
+                      : 'bg-[var(--color-bg)] text-[var(--color-ink)] border border-[var(--color-line)] hover:border-[var(--color-muted)]',
+                  ].join(' ')}
+                >
+                  {m === 'mosaic' ? 'Mosaic' : 'Carousel'}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-[var(--color-muted)]">
+              {mode === 'mosaic'
+                ? 'Feed seamless di grid profil — urutan upload terbalik.'
+                : 'Album geser (swipe) — urutan upload normal kiri→kanan.'}
+            </p>
+          </div>
+
           <GridPicker grid={grid} mode={mode} onChange={setGrid} />
 
           <div>
@@ -123,12 +149,7 @@ export default function App() {
 
           {error && <p className="text-sm text-[var(--color-blade)]">{error}</p>}
 
-          <AdvancedPanel
-            mode={mode}
-            onModeChange={setMode}
-            cfg={cfg}
-            onCfgChange={setCfg}
-          />
+          <AdvancedPanel cfg={cfg} onCfgChange={setCfg} />
         </section>
 
         {results.length > 0 && (
