@@ -134,6 +134,29 @@ export function HelpModal({ onClose }: Props) {
           </div>
         </section>
 
+        {/* Figma template */}
+        <a
+          href="https://www.figma.com/community/file/1653098192714197002"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 rounded-lg border border-[var(--color-line)] px-4 py-3 hover:border-[var(--color-muted)] transition-colors group"
+        >
+          <svg className="h-5 w-5 shrink-0 text-[var(--color-muted)] group-hover:text-[var(--color-ink)] transition-colors" viewBox="0 0 38 57" fill="currentColor">
+            <path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z"/>
+            <path d="M0 47.5a9.5 9.5 0 0 1 9.5-9.5H19v9.5a9.5 9.5 0 1 1-19 0z"/>
+            <path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z"/>
+            <path d="M0 9.5a9.5 9.5 0 0 0 9.5 9.5H19V0H9.5A9.5 9.5 0 0 0 0 9.5z"/>
+            <path d="M0 28.5a9.5 9.5 0 0 0 9.5 9.5H19V19H9.5A9.5 9.5 0 0 0 0 28.5z"/>
+          </svg>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-[var(--color-ink)]">Figma Template</p>
+            <p className="text-xs text-[var(--color-muted)] truncate">Frame + layout guide siap pakai untuk mosaic & carousel</p>
+          </div>
+          <svg className="h-4 w-4 shrink-0 text-[var(--color-muted)] ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+
         <button
           onClick={onClose}
           className="w-full rounded-lg py-2 text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)] border border-[var(--color-line)] transition-colors"
