@@ -6,11 +6,11 @@ const CAROUSEL_MAX_COLS = 10; // batas Instagram
 const MAX_ROWS = 8;
 
 const MOSAIC_PRESETS: { label: string; grid: GridSpec }[] = [
-  { label: '3×1', grid: { cols: 3, rows: 1 } },
-  { label: '3×2', grid: { cols: 3, rows: 2 } },
+  { label: '1×3', grid: { cols: 3, rows: 1 } },
+  { label: '2×3', grid: { cols: 3, rows: 2 } },
   { label: '3×3', grid: { cols: 3, rows: 3 } },
-  { label: '3×6', grid: { cols: 3, rows: 6 } },
-  { label: '3×8', grid: { cols: 3, rows: 8 } },
+  { label: '6×3', grid: { cols: 3, rows: 6 } },
+  { label: '8×3', grid: { cols: 3, rows: 8 } },
 ];
 
 const CAROUSEL_PRESETS: { label: string; grid: GridSpec }[] = [
