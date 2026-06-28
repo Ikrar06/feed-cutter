@@ -4,16 +4,26 @@ import { GridPicker } from './components/GridPicker';
 import { TargetSizeBadge } from './components/TargetSizeBadge';
 import { Dropzone } from './components/Dropzone';
 import { PreviewBoard } from './components/PreviewBoard';
-import { downloadBlob } from './lib/download';
+import { ResultGrid } from './components/ResultGrid';
+import { AdvancedPanel } from './components/AdvancedPanel';
 
 export default function App() {
-  const { grid, setGrid, cfg, file, setFile, target, results, status, error, run } =
-    useFeedCutter();
+  const {
+    grid, setGrid,
+    mode, setMode,
+    cfg, setCfg,
+    file, setFile,
+    offset, setOffset,
+    target,
+    results,
+    status,
+    error,
+    run,
+  } = useFeedCutter();
 
   const isCutting = status === 'cutting';
   const canCut = !!file && !isCutting;
 
-  // Object URL untuk preview desain yang diupload
   const [previewUrl, setPreviewUrl] = useState<string | undefined>();
   useEffect(() => {
     if (!file) { setPreviewUrl(undefined); return; }
@@ -45,7 +55,6 @@ export default function App() {
 
           <Dropzone target={target} onFile={setFile} />
 
-          {/* Preview tampilan feed IG */}
           <div>
             <p className="text-sm font-medium text-[var(--color-muted)] mb-2">
               Preview feed
@@ -53,7 +62,14 @@ export default function App() {
                 {' '}— angka = urutan upload
               </span>
             </p>
-            <PreviewBoard grid={grid} cfg={cfg} imageUrl={previewUrl} />
+            <PreviewBoard
+              grid={grid}
+              cfg={cfg}
+              imageUrl={previewUrl}
+              mode={mode}
+              offset={offset}
+              onOffsetChange={setOffset}
+            />
           </div>
 
           <button
@@ -71,43 +87,18 @@ export default function App() {
               : `Potong ${grid.cols * grid.rows} bagian`}
           </button>
 
-          {error && (
-            <p className="text-sm text-[var(--color-blade)]">{error}</p>
-          )}
+          {error && <p className="text-sm text-[var(--color-blade)]">{error}</p>}
+
+          <AdvancedPanel
+            mode={mode}
+            onModeChange={setMode}
+            cfg={cfg}
+            onCfgChange={setCfg}
+          />
         </section>
 
         {results.length > 0 && (
-          <section className="space-y-4">
-            <h2 className="text-base font-semibold">
-              Hasil — {results.length} potongan
-            </h2>
-            <div className="grid grid-cols-3 gap-3">
-              {results.map((r) => (
-                <div
-                  key={r.readingIndex}
-                  className="rounded-lg border border-[var(--color-line)] bg-[var(--color-panel)] overflow-hidden"
-                >
-                  <img
-                    src={r.url}
-                    alt={r.filename}
-                    className="w-full object-cover aspect-[4/5]"
-                  />
-                  <div className="p-2 space-y-1">
-                    <p className="text-xs text-[var(--color-muted)] truncate">{r.filename}</p>
-                    <p className="text-xs font-semibold text-[var(--color-blade)]">
-                      Upload ke-{r.uploadOrder}
-                    </p>
-                    <button
-                      onClick={() => downloadBlob(r.blob, r.filename)}
-                      className="w-full rounded text-xs py-1 bg-[var(--color-line)] hover:bg-[var(--color-muted)]/20 transition-colors"
-                    >
-                      Unduh
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+          <ResultGrid results={results} grid={grid} mode={mode} />
         )}
       </div>
     </div>

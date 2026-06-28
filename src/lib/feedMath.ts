@@ -1,9 +1,17 @@
 import type { CutConfig, GridSpec, DesignSize, TileSpec, CutMode } from '../types';
 import { DEFAULT_CONFIG, overlap, stepX, stepY } from './config';
 
-export function designSize(grid: GridSpec, cfg: CutConfig = DEFAULT_CONFIG): DesignSize {
+export function designSize(
+  grid: GridSpec,
+  cfg: CutConfig = DEFAULT_CONFIG,
+  mode: CutMode = 'mosaic',
+): DesignSize {
   return {
-    width:  grid.cols * cfg.visible + overlap(cfg),
+    // carousel: tidak ada overlap, tiap slide penuh postW
+    // mosaic:   ada overlap 68px antar kolom
+    width: mode === 'carousel'
+      ? grid.cols * cfg.postW
+      : grid.cols * cfg.visible + overlap(cfg),
     height: grid.rows * cfg.postH,
   };
 }
@@ -21,7 +29,9 @@ export function planTiles(
       tiles.push({
         row,
         col,
-        sx: col * stepX(cfg),
+        // carousel: geser per 1080 (tidak ada overlap)
+        // mosaic:   geser per 1012 (visible area)
+        sx: mode === 'carousel' ? col * cfg.postW : col * stepX(cfg),
         sy: row * stepY(cfg),
         readingIndex,
         uploadOrder: mode === 'mosaic' ? total - readingIndex : readingIndex + 1,

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { GridSpec } from '../types';
 
 const MAX_COLS = 3;
@@ -13,13 +14,55 @@ const PRESETS: { label: string; grid: GridSpec }[] = [
   { label: '3×8', grid: { cols: 3, rows: 8 } },
 ];
 
+function NumberInput({
+  value,
+  min,
+  max,
+  onChange,
+  className,
+}: {
+  value: number;
+  min: number;
+  max: number;
+  onChange: (v: number) => void;
+  className?: string;
+}) {
+  const [local, setLocal] = useState(String(value));
+
+  // Sync jika value berubah dari luar (misal preset diklik)
+  useEffect(() => { setLocal(String(value)); }, [value]);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setLocal(e.target.value);
+    const n = parseInt(e.target.value, 10);
+    if (!isNaN(n)) onChange(n); // onChange di GridPicker akan clamp
+  }
+
+  function handleBlur() {
+    const n = parseInt(local, 10);
+    if (local === '' || isNaN(n)) setLocal(String(value)); // reset ke nilai valid
+  }
+
+  return (
+    <input
+      type="number"
+      min={min}
+      max={max}
+      value={local}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      className={className}
+    />
+  );
+}
+
 interface Props {
   grid: GridSpec;
   onChange: (g: GridSpec) => void;
 }
 
 export function GridPicker({ grid, onChange }: Props) {
-  const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
+  const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
   const setCol = (v: number) => onChange({ ...grid, cols: clamp(v, 1, MAX_COLS) });
   const setRow = (v: number) => onChange({ ...grid, rows: clamp(v, 1, MAX_ROWS) });
@@ -27,6 +70,9 @@ export function GridPicker({ grid, onChange }: Props) {
   const activeLabel = PRESETS.find(
     (p) => p.grid.cols === grid.cols && p.grid.rows === grid.rows,
   )?.label;
+
+  const inputClass =
+    'w-16 px-2 py-1 rounded bg-[var(--color-bg)] text-[var(--color-ink)] border border-[var(--color-line)] text-center';
 
   return (
     <div className="space-y-3">
@@ -52,27 +98,13 @@ export function GridPicker({ grid, onChange }: Props) {
       <div className="flex items-center gap-4">
         <label className="flex items-center gap-2 text-sm text-[var(--color-muted)]">
           Kolom
-          <input
-            type="number"
-            min={1}
-            max={MAX_COLS}
-            value={grid.cols}
-            onChange={(e) => setCol(Number(e.target.value))}
-            className="w-16 px-2 py-1 rounded bg-[var(--color-bg)] text-[var(--color-ink)] border border-[var(--color-line)] text-center"
-          />
+          <NumberInput value={grid.cols} min={1} max={MAX_COLS} onChange={setCol} className={inputClass} />
           <span className="text-xs text-[var(--color-muted)]">maks {MAX_COLS}</span>
         </label>
         <span className="text-[var(--color-muted)]">×</span>
         <label className="flex items-center gap-2 text-sm text-[var(--color-muted)]">
           Baris
-          <input
-            type="number"
-            min={1}
-            max={MAX_ROWS}
-            value={grid.rows}
-            onChange={(e) => setRow(Number(e.target.value))}
-            className="w-16 px-2 py-1 rounded bg-[var(--color-bg)] text-[var(--color-ink)] border border-[var(--color-line)] text-center"
-          />
+          <NumberInput value={grid.rows} min={1} max={MAX_ROWS} onChange={setRow} className={inputClass} />
           <span className="text-xs text-[var(--color-muted)]">maks {MAX_ROWS}</span>
         </label>
       </div>
